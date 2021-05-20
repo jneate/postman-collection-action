@@ -1,11 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'James Neate'
+description: 'Use this GitHub Action to push Collection(s) from GitHub into a specific Postman Workspace'
+author: 'jneate'
 inputs:
-  milliseconds: # change this
+  postmanApiKey:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'The API Key used for the Postman Workspace'
 runs:
   using: 'node12'
   main: 'dist/index.js'
