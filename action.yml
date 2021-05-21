@@ -5,6 +5,9 @@ inputs:
   postmanApiKey:
     required: true
     description: 'The API Key used for the Postman Workspace'
+  postmanWorkspaceId:
+    required: false
+    description: 'The ID for the Postman Workspace'
 runs:
   using: 'node12'
   main: 'dist/index.js'
