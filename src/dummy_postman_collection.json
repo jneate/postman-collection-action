@@ -1,0 +1,63 @@
+{
+	"info": {
+		"_postman_id": "784d1a60-8827-410d-a4fe-8eab75ac5fbd",
+		"name": "Sample Collection 792",
+		"description": "This is just a sample collection.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "This is a folder",
+			"item": [
+				{
+					"name": "Sample POST Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"data\": \"123\"}"
+						},
+						"url": {
+							"raw": "https://postman-echo.com/post",
+							"protocol": "https",
+							"host": [
+								"postman-echo",
+								"com"
+							],
+							"path": [
+								"post"
+							]
+						},
+						"description": "This is a sample POST Request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sample GET Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://postman-echo/get",
+					"protocol": "https",
+					"host": [
+						"postman-echo"
+					],
+					"path": [
+						"get"
+					]
+				},
+				"description": "This is a sample GET Request"
+			},
+			"response": []
+		}
+	]
+}

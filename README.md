@@ -2,7 +2,7 @@
   <a href="https://github.com/jneate/postman-collection-action/actions"><img alt="postman-collection-action status" src="https://github.com/jneate/postman-collection-action/workflows/build-test/badge.svg"></a>
 </p>
 
-# Postman Collection Action 
+# Postman Collection Action
 
 This GitHub action will scan the repository contents for any Postman Collection JSON files and create or update the Collection in a specific [Postman Workspace](https://web.postman.co/workspace), the check to determine whether to create a new collection or update an existing one is based on the Collection ID, this is the `info._postman_id` field in an exported v2.1 collection.
 
@@ -27,7 +27,7 @@ If you don't have an API Key, you can follow the instructions [here](https://lea
 
 ### postmanWorkspaceId
 
-**Optional** This is ID of the Workspace the collection should be created/updated in. *Default*: `My Workspace` which is associated to your API Key.
+**Optional** This is the ID of the Workspace the collection should be created/updated in. *Default*: `My Workspace` which is associated to your API Key.
 
 ## Example Usage
 

@@ -2,7 +2,7 @@
   "name": "postman-collection-action",
   "version": "0.0.0",
   "private": true,
-  "description": "Postman Collection action to push collections in a GitHub Repo to a Postman Workspace",
+  "description": "Postman Collection Action to push postman collections in the GitHub Repo to a specific Postman Workspace",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -10,8 +10,7 @@
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
-    "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+    "all": "npm run build && npm run format && npm run lint && npm run package"
   },
   "repository": {
     "type": "git",
@@ -30,7 +29,6 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.15",
     "@types/node": "^14.14.9",
     "@typescript-eslint/parser": "^4.8.1",
     "@vercel/ncc": "^0.25.1",
