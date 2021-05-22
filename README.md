@@ -1,105 +1,57 @@
 <p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
+  <a href="https://github.com/jneate/postman-collection-action/actions"><img alt="postman-collection-action status" src="https://github.com/jneate/postman-collection-action/workflows/build-test/badge.svg"></a>
 </p>
 
-# Create a JavaScript Action using TypeScript
+# Postman Collection Action 
 
-Use this template to bootstrap the creation of a TypeScript action.:rocket:
+This GitHub action will scan the repository contents for any Postman Collection JSON files and create or update the Collection in a specific [Postman Workspace](https://web.postman.co/workspace), the check to determine whether to create a new collection or update an existing one is based on the Collection ID, this is the `info._postman_id` field in an exported v2.1 collection.
 
-This template includes compilation support, tests, a validation workflow, publishing, and versioning guidance.  
+The local search process finds any `.json` files, attempts to parse them as valid JSON objects and then checks the `info.schema` field to match `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`.
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+The following 4 Postman APIs are currently used:
 
-## Create an action from this template
+- Get All Collections - GET - `https://api.getpostman.com/collections`
+- Create a New Collection - POST - `https://api.getpostman.com/collections`
+- Create a New Collection in a Workspace - POST - `https://api.getpostman.com/collections?workspace={{workspace_id}}`
+- Update A Collections - `https://api.getpostman.com/collections/{{collection_uid}}`
 
-Click the `Use this Template` and provide the new repo details for your action
+## Inputs
 
-## Code in Main
+### postmanApiKey
 
-> First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
+**Required** This is the postman API key you have created that has access to your workspace.
 
-Install the dependencies  
-```bash
-$ npm install
-```
+If you don't have an API Key, you can follow the instructions [here](https://learning.postman.com/docs/developer/intro-api/#generating-a-postman-api-key)
 
-Build the typescript and package it for distribution
-```bash
-$ npm run build && npm run package
-```
+> *It's recommended to store this value in a secret so it's not visible in any log output / file content*
 
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
+### postmanWorkspaceId
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
+**Optional** This is ID of the Workspace the collection should be created/updated in. *Default*: `My Workspace` which is associated to your API Key.
 
-...
-```
+## Example Usage
 
-## Change action.yml
-
-The action.yml contains defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder. 
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml))
+### With Workspace ID Input
 
 ```yaml
-uses: ./
-with:
-  milliseconds: 1000
+- name: Checkout
+  uses: actions/checkout@v2
+
+- name: Sync Postman Collections
+  uses: jneate/postman-collection-action@v1
+  with:
+    postmanApiKey: ${{ secrets.postmanApiKey }}
+    postmanWorkspaceId: 0f41daa6-c9a7-49d9-8455-707e2f46da22
 ```
 
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
+### Without Workspace ID Input
 
-## Usage:
+```yaml
+- name: Checkout
+  uses: actions/checkout@v2
 
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+- name: Sync Postman Collections
+  uses: jneate/postman-collection-action@v1
+  with:
+    postmanApiKey: ${{ secrets.postmanApiKey }}
+```
