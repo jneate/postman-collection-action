@@ -65,7 +65,7 @@ async function run(): Promise<void> {
                 localCollection.info._postman_id = response.data.collection.id
                 await promises.writeFile(
                   localPath,
-                  JSON.stringify(localCollection)
+                  JSON.stringify(localCollection, null, '\t')
                 )
               }
             }
@@ -154,7 +154,7 @@ async function loadLocalPostmanCollections(): Promise<void> {
           `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`
         ) {
           localPostmanCollections.push(jsonContent)
-          localPostmanCollectionFileMap.set(jsonContent.info.postman_id, file)
+          localPostmanCollectionFileMap.set(jsonContent.info._postman_id, file)
         }
       } catch (e) {
         // If JSON can't be parsed it's not valid so ignore

@@ -91,7 +91,7 @@ function run() {
                             const localPath = localPostmanCollectionFileMap.get(oldId);
                             if (localPath) {
                                 localCollection.info._postman_id = response.data.collection.id;
-                                yield fs_1.promises.writeFile(localPath, JSON.stringify(localCollection));
+                                yield fs_1.promises.writeFile(localPath, JSON.stringify(localCollection, null, '\t'));
                             }
                         }
                         localCollection.info._postman_id = response.data.collection.id;
@@ -167,7 +167,7 @@ function loadLocalPostmanCollections() {
                 if (((_d = jsonContent === null || jsonContent === void 0 ? void 0 : jsonContent.info) === null || _d === void 0 ? void 0 : _d.schema) ===
                     `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`) {
                     localPostmanCollections.push(jsonContent);
-                    localPostmanCollectionFileMap.set(jsonContent.info.postman_id, file);
+                    localPostmanCollectionFileMap.set(jsonContent.info._postman_id, file);
                 }
             }
             catch (e) {
