@@ -48,7 +48,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(2186));
 const glob = __importStar(__webpack_require__(8090));
-const promises_1 = __webpack_require__(9225);
+const fs_1 = __webpack_require__(5747);
 const axios_1 = __importDefault(__webpack_require__(6545));
 const localPostmanCollections = [];
 const remotePostmanCollectionsMap = new Map();
@@ -151,7 +151,7 @@ function loadLocalPostmanCollections() {
             var _d;
             // Read the file content in memory and convert to JSON
             try {
-                const jsonContent = JSON.parse((yield promises_1.readFile(file)).toString());
+                const jsonContent = JSON.parse((yield fs_1.promises.readFile(file)).toString());
                 // Check if the JSON file is a "valid" Postman v2.1 Collection, when true store in array
                 if (((_d = jsonContent === null || jsonContent === void 0 ? void 0 : jsonContent.info) === null || _d === void 0 ? void 0 : _d.schema) ===
                     `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`) {
@@ -6560,14 +6560,6 @@ module.exports = require("assert");;
 
 "use strict";
 module.exports = require("fs");;
-
-/***/ }),
-
-/***/ 9225:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("fs/promises");;
 
 /***/ }),
 
