@@ -1,5 +1,5 @@
-name: 'James Neate'
-description: 'Use this GitHub Action to push Collection(s) from GitHub into a specific Postman Workspace'
+name: 'Postman Collection Action'
+description: 'Use this GitHub Action to create/update Postman Collection(s) from a GitHub Repo into a specific Postman Workspace'
 author: 'jneate'
 inputs:
   postmanApiKey:
