@@ -9,6 +9,7 @@ import {
 } from './types'
 
 const localPostmanCollections: LocalCollection[] = []
+const localPostmanCollectionFileMap: Map<string, string> = new Map()
 const remotePostmanCollectionsMap: Map<string, RemoteCollection> = new Map()
 
 const restClient: AxiosInstance = axios.create({
@@ -52,6 +53,23 @@ async function run(): Promise<void> {
             response = await restClient.post(createURi, {
               collection: localCollection
             })
+            if (
+              localCollection.info._postman_id !== response.data.collection.id
+            ) {
+              // IDs are different, update local file
+              const oldId: string = localCollection.info._postman_id
+              const localPath:
+                | string
+                | undefined = localPostmanCollectionFileMap.get(oldId)
+              if (localPath) {
+                localCollection.info._postman_id = response.data.collection.id
+                await promises.writeFile(
+                  localPath,
+                  JSON.stringify(localCollection)
+                )
+              }
+            }
+            localCollection.info._postman_id = response.data.collection.id
           } else {
             // This is the tricky bit, I don't want to compare if collections are different so always trigger the PUT Request
             // Consider using the GitHub Action trigger filters to only execute this action when json files change
@@ -136,6 +154,7 @@ async function loadLocalPostmanCollections(): Promise<void> {
           `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`
         ) {
           localPostmanCollections.push(jsonContent)
+          localPostmanCollectionFileMap.set(jsonContent.info.postman_id, file)
         }
       } catch (e) {
         // If JSON can't be parsed it's not valid so ignore

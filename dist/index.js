@@ -51,6 +51,7 @@ const glob = __importStar(__webpack_require__(8090));
 const fs_1 = __webpack_require__(5747);
 const axios_1 = __importDefault(__webpack_require__(6545));
 const localPostmanCollections = [];
+const localPostmanCollectionFileMap = new Map();
 const remotePostmanCollectionsMap = new Map();
 const restClient = axios_1.default.create({
     baseURL: 'https://api.getpostman.com',
@@ -84,6 +85,16 @@ function run() {
                         response = yield restClient.post(createURi, {
                             collection: localCollection
                         });
+                        if (localCollection.info._postman_id !== response.data.collection.id) {
+                            // IDs are different, update local file
+                            const oldId = localCollection.info._postman_id;
+                            const localPath = localPostmanCollectionFileMap.get(oldId);
+                            if (localPath) {
+                                localCollection.info._postman_id = response.data.collection.id;
+                                yield fs_1.promises.writeFile(localPath, JSON.stringify(localCollection));
+                            }
+                        }
+                        localCollection.info._postman_id = response.data.collection.id;
                     }
                     else {
                         // This is the tricky bit, I don't want to compare if collections are different so always trigger the PUT Request
@@ -156,6 +167,7 @@ function loadLocalPostmanCollections() {
                 if (((_d = jsonContent === null || jsonContent === void 0 ? void 0 : jsonContent.info) === null || _d === void 0 ? void 0 : _d.schema) ===
                     `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`) {
                     localPostmanCollections.push(jsonContent);
+                    localPostmanCollectionFileMap.set(jsonContent.info.postman_id, file);
                 }
             }
             catch (e) {
