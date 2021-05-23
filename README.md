@@ -29,9 +29,13 @@ If you don't have an API Key, you can follow the instructions [here](https://lea
 
 **Optional** This is the ID of the Workspace the collection should be created/updated in. *Default*: `My Workspace` which is associated to your API Key.
 
+### postmanTimeout
+
+**Optional** This is the number of milliseconds to wait for the Postman APIs to respond before timing out. *Default*: `15000`
+
 ## Example Usage
 
-### With Workspace ID Input
+### All Inputs
 
 ```yaml
 - name: Checkout
@@ -42,9 +46,10 @@ If you don't have an API Key, you can follow the instructions [here](https://lea
   with:
     postmanApiKey: ${{ secrets.postmanApiKey }}
     postmanWorkspaceId: 0f41daa6-c9a7-49d9-8455-707e2f46da22
+    postmanTimeout: 30000
 ```
 
-### Without Workspace ID Input
+### Required Only Inputs
 
 ```yaml
 - name: Checkout

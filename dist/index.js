@@ -54,7 +54,7 @@ const localPostmanCollections = [];
 const remotePostmanCollectionsMap = new Map();
 const restClient = axios_1.default.create({
     baseURL: 'https://api.getpostman.com',
-    timeout: 10000,
+    timeout: Number(core.getInput('postmanTimeout')) || 15000,
     headers: {
         'X-Api-Key': core.getInput('postmanApiKey')
     }

@@ -7,7 +7,10 @@ inputs:
     description: 'The API Key used for the Postman Workspace'
   postmanWorkspaceId:
     required: false
-    description: 'The ID for the Postman Workspace'
+    description: 'The ID for the Postman Workspace - Defaults to <My Workspace>'
+  postmanTimeout:
+    required: false
+    description: 'The number of milliseconds to wait for Postman APIs to respond before timing out - Defaults to 15000'
 runs:
   using: 'node12'
   main: 'dist/index.js'
