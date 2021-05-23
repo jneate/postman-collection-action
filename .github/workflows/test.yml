@@ -15,15 +15,6 @@ jobs:
           npm install
       - run: |
           npm run all
-  test: # make sure the action works on a clean machine without building
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./
-        with:
-          postmanApiKey: ${{ secrets.postmanApiKey }}
-          postmanWorkspaceId: 0f41daa6-c9a7-49d9-8455-707e2f46da22
-          postmanTimeout: 30000
   testWithCommit: # make sure the action can commit files changed too
     runs-on: ubuntu-latest
     steps:
