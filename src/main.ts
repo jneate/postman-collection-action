@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as glob from '@actions/glob'
-import {readFile} from 'fs/promises'
+import {promises} from 'fs'
 import axios, {AxiosInstance, AxiosResponse} from 'axios'
 import {
   LocalCollection,
@@ -127,7 +127,7 @@ async function loadLocalPostmanCollections(): Promise<void> {
     files.map(async file => {
       // Read the file content in memory and convert to JSON
       try {
-        const jsonContent = JSON.parse((await readFile(file)).toString())
+        const jsonContent = JSON.parse((await promises.readFile(file)).toString())
         // Check if the JSON file is a "valid" Postman v2.1 Collection, when true store in array
         if (
           jsonContent?.info?.schema ===
