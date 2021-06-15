@@ -37,11 +37,8 @@ async function run(): Promise<void> {
     await Promise.all(
       localPostmanCollections.map(async (localCollection: LocalCollection) => {
         try {
-          const remoteCollection:
-            | RemoteCollection
-            | undefined = remotePostmanCollectionsMap.get(
-            localCollection.info._postman_id
-          )
+          const remoteCollection: RemoteCollection | undefined =
+            remotePostmanCollectionsMap.get(localCollection.info._postman_id)
 
           let response: AxiosResponse<RemoteCollectionContainer>
 
@@ -58,9 +55,8 @@ async function run(): Promise<void> {
             ) {
               // IDs are different, update local file
               const oldId: string = localCollection.info._postman_id
-              const localPath:
-                | string
-                | undefined = localPostmanCollectionFileMap.get(oldId)
+              const localPath: string | undefined =
+                localPostmanCollectionFileMap.get(oldId)
               if (localPath) {
                 localCollection.info._postman_id = response.data.collection.id
                 await promises.writeFile(
