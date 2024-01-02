@@ -1,8 +1,10 @@
+# Postman Collection Action
+
+This is a forked and modified version of https://github.com/jneate/postman-collection-action. This action now takes an additional input, specPath, to update a single Postman collection rather than multiple.
+
 <p align="center">
   <a href="https://github.com/jneate/postman-collection-action/actions"><img alt="postman-collection-action status" src="https://github.com/jneate/postman-collection-action/workflows/build-test/badge.svg"></a>
 </p>
-
-# Postman Collection Action
 
 This GitHub action will scan the repository contents for any Postman Collection JSON files and create or update the Collection in a specific [Postman Workspace](https://web.postman.co/workspace), the check to determine whether to create a new collection or update an existing one is based on the Collection ID, this is the `info._postman_id` field in an exported v2.1 collection.
 
@@ -36,6 +38,12 @@ If you don't have an API Key, you can follow the instructions [here](https://lea
 ### postmanTimeout
 
 **Optional** This is the number of milliseconds to wait for the Postman APIs to respond before timing out. *Default*: `15000`
+
+### specPath
+
+**Optional** Specify a single path to the spec you would like to use to update the collection.
+
+**Note:** This will override local search functionality mentioned above
 
 ## Example Usage
 
