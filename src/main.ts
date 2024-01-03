@@ -29,7 +29,7 @@ const addLocalSpecFile: (file: string) => Promise<void> = async (
   // Read the file content in memory and convert to JSON
   try {
     const jsonContent = JSON.parse((await promises.readFile(file)).toString())
-    core.info(jsonContent)
+    core.info(jsonContent.info.schema)
     // Check if the JSON file is a "valid" Postman v2.1 Collection, when true store in array
     if (
       jsonContent?.info?.schema ===
@@ -53,18 +53,18 @@ async function run(): Promise<void> {
       core.info(
         `Using 'specPath' (${specPath}) input to load Postman Collection`
       )
-      await addLocalSpecFile(specPath)
     } else {
       core.info('Using glob pattern to load Postman Collection(s)')
-      await Promise.all([
-        loadLocalPostmanCollections(),
-        loadRemotePostmanCollections()
-      ])
+    }
 
-      if (localPostmanCollections.length === 0) {
-        // No local postman collections found so exit early
-        return
-      }
+    await Promise.all([
+      specPath ? addLocalSpecFile(specPath) : loadLocalPostmanCollections(),
+      loadRemotePostmanCollections()
+    ])
+
+    if (localPostmanCollections.length === 0) {
+      // No local postman collections found so exit early
+      return
     }
 
     await Promise.all(

@@ -66,7 +66,7 @@ const addLocalSpecFile = (file) => __awaiter(void 0, void 0, void 0, function* (
     // Read the file content in memory and convert to JSON
     try {
         const jsonContent = JSON.parse((yield fs_1.promises.readFile(file)).toString());
-        core.info(jsonContent);
+        core.info(jsonContent.info.schema);
         // Check if the JSON file is a "valid" Postman v2.1 Collection, when true store in array
         if (((_a = jsonContent === null || jsonContent === void 0 ? void 0 : jsonContent.info) === null || _a === void 0 ? void 0 : _a.schema) ===
             `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`) {
@@ -88,18 +88,17 @@ function run() {
         try {
             if (specPath) {
                 core.info(`Using 'specPath' (${specPath}) input to load Postman Collection`);
-                yield addLocalSpecFile(specPath);
             }
             else {
                 core.info('Using glob pattern to load Postman Collection(s)');
-                yield Promise.all([
-                    loadLocalPostmanCollections(),
-                    loadRemotePostmanCollections()
-                ]);
-                if (localPostmanCollections.length === 0) {
-                    // No local postman collections found so exit early
-                    return;
-                }
+            }
+            yield Promise.all([
+                specPath ? addLocalSpecFile(specPath) : loadLocalPostmanCollections(),
+                loadRemotePostmanCollections()
+            ]);
+            if (localPostmanCollections.length === 0) {
+                // No local postman collections found so exit early
+                return;
             }
             yield Promise.all(localPostmanCollections.map((localCollection) => __awaiter(this, void 0, void 0, function* () {
                 var _a, _b, _c, _d, _e, _f, _g, _h;
