@@ -53,7 +53,7 @@ async function run(): Promise<void> {
   try {
     if (specPath) {
       core.info(`Using 'specPath' (${specPath}) input to load Postman Collection`)
-      addLocalSpecFile(specPath);
+      await addLocalSpecFile(specPath);
     } else {
       core.info('Using glob pattern to load Postman Collection(s)')
       await Promise.all([
