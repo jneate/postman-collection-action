@@ -4,6 +4,9 @@
   "private": true,
   "description": "Postman Collection Action to push postman collections in the GitHub Repo to a specific Postman Workspace",
   "main": "lib/main.js",
+  "engines": {
+    "node": "16"
+  },
   "scripts": {
     "build": "tsc",
     "format": "prettier --write **/*.ts",

@@ -22,9 +22,10 @@ const restClient = axios.create({
 
 const postmanWorkspaceId = core.getInput('postmanWorkspaceId')
 // const specPath = core.getInput('specPath')
-const specPath = "./dist/postman.json"
+const specPath = './dist/postman.json'
 
-if(specPath) core.info(`Using 'specPath' (${specPath}) input to load Postman Collection`)
+if (specPath)
+  core.info(`Using 'specPath' (${specPath}) input to load Postman Collection`)
 
 const addLocalSpecFile: (file: string) => Promise<void> = async (
   file: string
@@ -52,8 +53,10 @@ const addLocalSpecFile: (file: string) => Promise<void> = async (
 async function run(): Promise<void> {
   try {
     if (specPath) {
-      core.info(`Using 'specPath' (${specPath}) input to load Postman Collection`)
-      await addLocalSpecFile(specPath);
+      core.info(
+        `Using 'specPath' (${specPath}) input to load Postman Collection`
+      )
+      await addLocalSpecFile(specPath)
     } else {
       core.info('Using glob pattern to load Postman Collection(s)')
       await Promise.all([
