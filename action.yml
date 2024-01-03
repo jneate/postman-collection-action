@@ -15,7 +15,7 @@ inputs:
     required: false
     description: 'The path to a single spec file you would like to use to update the collection'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 branding:
   icon: 'upload-cloud'
