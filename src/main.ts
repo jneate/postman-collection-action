@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as glob from '@actions/glob'
 import {promises} from 'fs'
-import axios, {AxiosInstance, AxiosResponse} from 'axios'
+import axios, {AxiosResponse} from 'axios'
 import {
   LocalCollection,
   RemoteCollection,
@@ -12,7 +12,7 @@ const localPostmanCollections: LocalCollection[] = []
 const localPostmanCollectionFileMap: Map<string, string> = new Map()
 const remotePostmanCollectionsMap: Map<string, RemoteCollection> = new Map()
 
-const restClient: AxiosInstance = axios.create({
+const restClient = axios.create({
   baseURL: 'https://api.getpostman.com',
   timeout: Number(core.getInput('postmanTimeout')) || 15000,
   headers: {
@@ -22,16 +22,44 @@ const restClient: AxiosInstance = axios.create({
 
 const postmanWorkspaceId = core.getInput('postmanWorkspaceId')
 
+const addLocalSpecFile: (file: string) => Promise<void> = async (
+  file: string
+) => {
+  // Read the file content in memory and convert to JSON
+  try {
+    const jsonContent = JSON.parse((await promises.readFile(file)).toString())
+    // Check if the JSON file is a "valid" Postman v2.1 Collection, when true store in array
+    if (
+      jsonContent?.info?.schema ===
+      `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`
+    ) {
+      localPostmanCollections.push(jsonContent)
+      localPostmanCollectionFileMap.set(jsonContent.info._postman_id, file)
+    }
+  } catch (e) {
+    // If JSON can't be parsed it's not valid so ignore
+    // console.error(`Unable to parse JSON file ${file}`, e)
+  }
+}
+
 async function run(): Promise<void> {
   try {
-    await Promise.all([
-      loadLocalPostmanCollections(),
-      loadRemotePostmanCollections()
-    ])
+    if (core.getInput('specPath')) {
+      localPostmanCollections.push(
+        JSON.parse(
+          (await promises.readFile(core.getInput('specPath'))).toString()
+        )
+      )
+    } else {
+      await Promise.all([
+        loadLocalPostmanCollections(),
+        loadRemotePostmanCollections()
+      ])
 
-    if (localPostmanCollections.length === 0) {
-      // No local postman collections found so exit early
-      return
+      if (localPostmanCollections.length === 0) {
+        // No local postman collections found so exit early
+        return
+      }
     }
 
     await Promise.all(
@@ -84,7 +112,7 @@ async function run(): Promise<void> {
               response.data?.collection?.id
             }`
           )
-        } catch (error) {
+        } catch (error: any) {
           core.error(
             `Status ${error.response?.status} - Unable to process collection ${localCollection.info.name} with Postman ID ${localCollection.info._postman_id} due to: ${error.response?.data?.error?.message}`
           )
@@ -94,7 +122,7 @@ async function run(): Promise<void> {
         }
       })
     )
-  } catch (error) {
+  } catch (error: any) {
     core.setFailed(error.message)
   }
 }
@@ -111,7 +139,7 @@ async function loadRemotePostmanCollections(): Promise<void> {
     core.info(
       `${remotePostmanCollectionsMap.size} Non-Forked Collection(s) found for the given API Key in Remote Postman`
     )
-  } catch (error) {
+  } catch (error: any) {
     core.setFailed(
       `Status ${error.response?.status} - Response: ${error.response?.data}`
     )
@@ -137,26 +165,7 @@ async function loadLocalPostmanCollections(): Promise<void> {
   }
 
   // Wait for all files to be processed before progressing
-  await Promise.all(
-    files.map(async file => {
-      // Read the file content in memory and convert to JSON
-      try {
-        const jsonContent = JSON.parse(
-          (await promises.readFile(file)).toString()
-        )
-        // Check if the JSON file is a "valid" Postman v2.1 Collection, when true store in array
-        if (
-          jsonContent?.info?.schema ===
-          `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`
-        ) {
-          localPostmanCollections.push(jsonContent)
-          localPostmanCollectionFileMap.set(jsonContent.info._postman_id, file)
-        }
-      } catch (e) {
-        // If JSON can't be parsed it's not valid so ignore
-      }
-    })
-  )
+  await Promise.all(files.map(addLocalSpecFile))
 
   core.info(
     `${localPostmanCollections.length} JSON Postman Collection(s) found`

@@ -11,6 +11,9 @@ inputs:
   postmanTimeout:
     required: false
     description: 'The number of milliseconds to wait for Postman APIs to respond before timing out - Defaults to 15000'
+  specPath:
+    required: false
+    description: 'The path to a single spec file you would like to use to update the collection'
 runs:
   using: 'node12'
   main: 'dist/index.js'
