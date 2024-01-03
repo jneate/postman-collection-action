@@ -38,18 +38,16 @@ const addLocalSpecFile: (file: string) => Promise<void> = async (
     }
   } catch (e) {
     // If JSON can't be parsed it's not valid so ignore
-    // console.error(`Unable to parse JSON file ${file}`, e)
+    core.info(`Unable to parse JSON file ${file}`)
   }
 }
 
 async function run(): Promise<void> {
   try {
     if (core.getInput('specPath')) {
-      localPostmanCollections.push(
-        JSON.parse(
-          (await promises.readFile(core.getInput('specPath'))).toString()
-        )
-      )
+      const specPath = core.getInput('specPath')
+      core.info(`Using 'specPath' (${specPath}) input to load Postman Collection`)
+      addLocalSpecFile(specPath);
     } else {
       await Promise.all([
         loadLocalPostmanCollections(),
