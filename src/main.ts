@@ -21,6 +21,10 @@ const restClient = axios.create({
 })
 
 const postmanWorkspaceId = core.getInput('postmanWorkspaceId')
+// const specPath = core.getInput('specPath')
+const specPath = "./dist/postman.json"
+
+if(specPath) core.info(`Using 'specPath' (${specPath}) input to load Postman Collection`)
 
 const addLocalSpecFile: (file: string) => Promise<void> = async (
   file: string
@@ -35,6 +39,9 @@ const addLocalSpecFile: (file: string) => Promise<void> = async (
     ) {
       localPostmanCollections.push(jsonContent)
       localPostmanCollectionFileMap.set(jsonContent.info._postman_id, file)
+      core.info(`Successfully loaded JSON file ${file}`)
+    } else {
+      core.info(`JSON file ${file} is not a valid Postman Collection`)
     }
   } catch (e) {
     // If JSON can't be parsed it's not valid so ignore
@@ -44,11 +51,11 @@ const addLocalSpecFile: (file: string) => Promise<void> = async (
 
 async function run(): Promise<void> {
   try {
-    if (core.getInput('specPath')) {
-      const specPath = core.getInput('specPath')
+    if (specPath) {
       core.info(`Using 'specPath' (${specPath}) input to load Postman Collection`)
       addLocalSpecFile(specPath);
     } else {
+      core.info('Using glob pattern to load Postman Collection(s)')
       await Promise.all([
         loadLocalPostmanCollections(),
         loadRemotePostmanCollections()
