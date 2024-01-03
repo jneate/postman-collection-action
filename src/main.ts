@@ -21,11 +21,7 @@ const restClient = axios.create({
 })
 
 const postmanWorkspaceId = core.getInput('postmanWorkspaceId')
-// const specPath = core.getInput('specPath')
-const specPath = './dist/postman.json'
-
-if (specPath)
-  core.info(`Using 'specPath' (${specPath}) input to load Postman Collection`)
+const specPath = core.getInput('specPath')
 
 const addLocalSpecFile: (file: string) => Promise<void> = async (
   file: string
@@ -33,6 +29,7 @@ const addLocalSpecFile: (file: string) => Promise<void> = async (
   // Read the file content in memory and convert to JSON
   try {
     const jsonContent = JSON.parse((await promises.readFile(file)).toString())
+    core.info(jsonContent)
     // Check if the JSON file is a "valid" Postman v2.1 Collection, when true store in array
     if (
       jsonContent?.info?.schema ===
